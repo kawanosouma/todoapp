@@ -16,3 +16,13 @@ router.get("/items/:id", function (req, res, next) {
 });
 
 module.exports = router;
+
+router.get("/tasks", async function (req, res, next){
+  const getTaks = await taks.getTasks(req.params.id);
+  res.send(getTasks);
+ });
+
+ router.patch("/tasks", async function (req, res, next){
+  const getTaks = await taks.getTasks(req.params.id, req.body);
+  res.send(getTasks);
+ });
