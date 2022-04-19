@@ -31,7 +31,7 @@
       <button class="display-none">キャンセル</button>
       <button class="display-none" id="create-task">登録</button>
     </div>
-    <table border="1">
+    <table border="1" id="todo-list">
       <tr>
         <th>タスク</th>
         <th>期限</th>
@@ -86,31 +86,45 @@
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
       crossorigin="anonymous"
     ></script>
-
+      <script src="../javascripts/index.js"> </script>
+  
     <script>
 
       //タスク一覧表示
 
-      $(async function( {
+      $(async function(){
+
 
       const response = await httpGet(
-      "//" + window.location.host + "/api/tasks"
+        "//" + window.location.host + "/api/tasks"
       );
+        console.log(response);
+
 
       const list = response.map((item) => {
       //リスト表示
-      return'
-      <li>
-      <span>${item.task_name}</span>
-      <span>${item.readline}</span>
-      <span><button id="update-button" data-id=${item.id} >更新</button></span>
-      <span><button id="delete-button" data-id=${item.id} data-deleate=${item.task_name}>削除</button></span>
-      </li>';
-  });
+      
+        return ` 
+        
+        <tr>
+        <td>${item.task_name}</td>
+        <td>${item.deadline}</td>
+        <td><button class="update-button" id="update-button" data-id=${item.id}>更新</button></td>
+        <td>
+          <button class="delete" id="delete-button" data-id=${item.id} data-deleate=${item.task_name}>削除</button>
+        </td>
+        </tr>`
+        
 
-//ulタグ追加
-$("ul#task-list").append(list);
-}};
+      });
+      // ulタグ追加
+      $("table#todo-list").append(list);
+
+
+
+      });
+
+
 
       
 
@@ -122,11 +136,34 @@ $("ul#task-list").append(list);
         const taskName = $(this).data("delete");
         alert(`下記の内容を削除します。\n ${taskName}`);
       });
-      // 新規登録ボタン押下時
-      $("#create-button").on("click", function () {
+      $("#create-button").on("click", function (){
         $("#create-form").show();
       });
 
+      // 新規登録ボタン押下時
+
+      $("#create-task").on("click", async function () {
+        
+        //取得
+        const requestData = {
+          taskName: $("#create-form input[name=taskName]").val(),
+          deadline: $("#create-form input[name=deadline]").val(),
+          category: $("#create-form select[name=category]").val(),  
+        };
+
+        // API実行
+        const response = await httpPost(
+          "//" + window.location.host + "/api/tasks",
+          requestData
+        );
+
+        //画面リロード
+
+        window.location.reload();
+      });
+
+
+       
       // 更新ボタン押下時
       $(document).on("click", "update-button" , async function(){
         $("#update-form").show();
@@ -150,7 +187,7 @@ $("ul#task-list").append(list);
         $("#update-form input [name=status]").val(response[0].task_status);
 
 
-      })
+      });
 
 
         //保存ボタン押　課題3
@@ -163,45 +200,18 @@ $("ul#task-list").append(list);
             deadline: $("#update-form input [name=deadline]").val(),
             category: $("#update-form select [name=category]").val(),
             status:   $("#update-form select [name=status]").val(),
+          }
 
             //新規登録
             const response = await httpGet(
-            "//" + window.location.host + '/api/tasks${id}',
+            "//" + window.location.host + `/api/tasks/${id}`,
             requestData
             );
 
             //画面をリロード
             window.location.reload();
       
-          }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          });
 
 
       $(".update-button").on("click", function () {
