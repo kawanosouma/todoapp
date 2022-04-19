@@ -79,7 +79,7 @@
       </form>
 
       <button class="display-none">キャンセル</button>
-      <button class="display-none" id="udpate-task">保存</button>
+      <button class="display-none" id="update-task">保存</button>
 
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -109,7 +109,7 @@
         <tr>
         <td>${item.task_name}</td>
         <td>${item.deadline}</td>
-        <td><button class="update-button" id="update-button" data-id=${item.id}>更新</button></td>
+        <td><button class="update-button" data-id=${item.id}>更新</button></td>
         <td>
           <button class="delete" id="delete-button" data-id=${item.id} data-deleate=${item.task_name}>削除</button>
         </td>
@@ -132,12 +132,24 @@
 
 
       // 削除ボタン押下時
-      $(".delete").on("click", function () {
+      $(document).on("click", ".delete",async function () {
         const taskName = $(this).data("delete");
-        alert(`下記の内容を削除します。\n ${taskName}`);
-      });
+        const deleteConfirm = window.confirm(`${taskName}を削除しますか？`);
+        if(deleteConfirm){
+          const id = $(this).data("id");
+          const response = await httpDelete(
+            "//" + window.location.host + `/api/tasks/${id}`
+          );
+          window.location.reload();
+         }
+
+        });
+        
+        
+        alert(`下記の内容を削除しました。\n ${taskName}`);
+      
       $("#create-button").on("click", function (){
-        $("#create-form").show();
+       
       });
 
       // 新規登録ボタン押下時
@@ -165,26 +177,26 @@
 
        
       // 更新ボタン押下時
-      $(document).on("click", "update-button" , async function(){
+      $(document).on("click", ".update-button" , async function(){
         $("#update-form").show();
         const id = $(this).data("id");
         const response = await httpGet(
-          "//" + window.location.host + '/api/tasks/${id}'
+          "//" + window.location.host + `/api/tasks/${id}`
         );
-
+        console.log(response);
         //日付
-        const data = new Date(response[0].deadline);
-        const year = data.getFullYear();
-        const month = ("0" + (data.getMonth() + 1)).slice(-2);
-        const day  = ("0" + data.getDate()).slice(-2);
-        const deadlineVal = '${year}-${month}-${day}';
+        const date = new Date(response[0].deadline);
+        const year = date.getFullYear();
+        const month = ("0" + (date.getMonth() + 1)).slice(-2);
+        const day  = ("0" + date.getDate()).slice(-2);
+        const deadlineVal = `${year}-${month}-${day}`;
 
         //初期値
-        $("#update-form input [name=id]").val(response[0].id);
-        $("#update-form input [name=task]").val(response[0].task_name);
-        $("#update-form input [name=deadline]").val(deadlineVal);
-        $("#update-form input [name=category]").val(response[0].category_id);
-        $("#update-form input [name=status]").val(response[0].task_status);
+        $("#update-form input[name=id]").val(response[0].id);
+        $("#update-form input[name=task]").val(response[0].task_name);
+        $("#update-form input[name=deadline]").val(deadlineVal);
+        $("#update-form input[name=category]").val(response[0].category_id);
+        $("#update-form input[name=status]").val(response[0].task_status);
 
 
       });
@@ -193,30 +205,26 @@
         //保存ボタン押　課題3
         $("#update-task").on("click", async function(){
           const id = $("#update-form input[name=id]").val();
-
-
           const requestData = {
-            taskName: $("#update-form input [name=task]").val(),
-            deadline: $("#update-form input [name=deadline]").val(),
-            category: $("#update-form select [name=category]").val(),
-            status:   $("#update-form select [name=status]").val(),
+            taskName: $("#update-form input[name=task]").val(),
+            deadline: $("#update-form input[name=deadline]").val(),
+            category: $("#update-form select[name=category]").val(),
+            status:   $("#update-form select[name=status]").val(),
           }
-
-            //新規登録
-            const response = await httpGet(
+            console.log(requestData);
+            //更新api
+            const response = await httpUpdate(
             "//" + window.location.host + `/api/tasks/${id}`,
             requestData
             );
-
+          console.log(response);
             //画面をリロード
             window.location.reload();
       
           });
 
 
-      $(".update-button").on("click", function () {
-        $("#update-form").show();
-      });
+      
 
       // フォームを閉じたいとき
       $(".display-none").on("click", function () {
