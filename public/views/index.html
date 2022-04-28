@@ -2,13 +2,32 @@
 <html>
   <head>
     <meta charset="utf-8" />
+   
+    <meta name="viewport" content="width=device-width">
+
     <title>下層ページ</title>
     <link rel="stylesheet" href="../../stylesheets/style.css" />
   </head>
   <body>
+
+    <form name="cal">
+      <br>
+      <input type="date">
+      <br>
+
+    </form>
+
+
+　　
+    <script>
+      alert('to do app　  サイトへ移行します');
+     </script>
+
+
+    <body bgcolor="#000000" text="#cccccc">
     <style>
       table {
-        margin-top: 20px;
+        margin-top: 40px;
       }
     </style>
 
@@ -111,7 +130,7 @@
         <td>${item.deadline}</td>
         <td><button class="update-button" data-id=${item.id}>更新</button></td>
         <td>
-          <button class="delete" id="delete-button" data-id=${item.id} data-deleate=${item.task_name}>削除</button>
+          <button class="delete"  data-id=${item.id} data-delete=${item.task_name}>削除</button>
         </td>
         </tr>`
         
@@ -137,18 +156,23 @@
         const deleteConfirm = window.confirm(`${taskName}を削除しますか？`);
         if(deleteConfirm){
           const id = $(this).data("id");
+          console.log(id);
+          console.log(taskName);
           const response = await httpDelete(
             "//" + window.location.host + `/api/tasks/${id}`
           );
-          window.location.reload();
+          alert(`下記の内容を削除しました。\n ${taskName}`);
+         window.location.reload();
          }
 
         });
         
         
-        alert(`下記の内容を削除しました。\n ${taskName}`);
+        
       
-      $("#create-button").on("click", function (){
+      $("#create-button").on("click", function (){ 
+        
+        $("#create-form").show();
        
       });
 
@@ -169,7 +193,7 @@
           requestData
         );
 
-        //画面リロード
+        //画面リロードします
 
         window.location.reload();
       });

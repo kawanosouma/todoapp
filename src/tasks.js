@@ -36,7 +36,7 @@ getTaskId = async function (id) {
        
         let d = [id];
         const [rows,fields] = await connection.query(sql, d);
-        console.log(rows);
+      
         return rows;
     } catch (err){
         console.log(err);

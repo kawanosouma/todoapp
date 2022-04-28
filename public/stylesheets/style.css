@@ -1,8 +1,49 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding: 80px;
+  font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-  color: #00b7ff;
+  color: #00d9ff;
+
+
+    background-color: black;
+    color: white;
 }
+
+@media screen and (max-width: 768px) {
+    p{
+        background-color: black;
+         color:green;
+     }
+ }
+ 
+ @media screen and (max-width: 480px) {
+    p{
+        background-color: black;
+         color:red;
+     }
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+

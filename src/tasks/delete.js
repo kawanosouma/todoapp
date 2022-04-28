@@ -3,7 +3,7 @@
 const mysql = require("mysql2/promise");
 const config = require("../../config.js");
 
-deleateTasksId = async function (id) {
+deleteTasksId = async function (id) {
     let connection = null;
     try{
         connection = await mysql.createConnection(config.dbSetting);
@@ -14,8 +14,8 @@ deleateTasksId = async function (id) {
             
         let d = [id];
         const [rows,fields] = await connection.query(sql, d);
-
-        //console.log(rows);
+        console.log(248);
+        console.log(rows);
         return rows;
     } catch (err){
         console.log(err);
@@ -25,4 +25,4 @@ deleateTasksId = async function (id) {
 
 };
 
-exports.deleateTasksId = deleateTasksId;
+exports.deleteTasksId = deleteTasksId;

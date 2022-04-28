@@ -24,10 +24,10 @@ router.get("/tasks/:id", async function (req, res, next) {
 
 // タスク消去
 router.delete("/tasks/:id", async function (req, res, next) {
-  const item = await tasks.getTaskId(req.params.id);
-  console.log(123);
-  console.log(item);
-  res.send(item);
+  const deleteItem = await delTask.deleteTasksId(req.params.id);
+  console.log(987);
+  console.log(deleteItem);
+  res.send(deleteItem);
 });
 
 
